@@ -66,19 +66,26 @@ public class Main {
 					if (splitCommand.length < 3) {
 						System.out.println("게시물 번호를 입력해주세요.");
 						continue;
+					}else {
+						try {
+							Integer.parseInt(splitCommand[2]);
+						} catch(NumberFormatException ex) {
+							System.out.println("숫자를 입력해주세요.");
+							continue;
+						}
 					}
 					int id = Integer.parseInt(splitCommand[2]);
-					boolean findIdCheck = true;
+					boolean findIdCheck = false;
 					for (int i = 0; i < articles.size(); i++) {
 						if (articles.get(i).id == id) {
 							System.out.println("-----------------------------");
 							System.out.println(id + "번 글 -");
 							System.out.println("제목: " + articles.get(i).title);
 							System.out.println("내용: " + articles.get(i).body);
-							findIdCheck = false;
+							findIdCheck = true;
 						}
 					}
-					if (findIdCheck) {
+					if (!findIdCheck) {
 						System.out.println(id + "번 글은 존재하지 않습니다.");
 					}
 
@@ -86,17 +93,24 @@ public class Main {
 					if (splitCommand.length < 3) {
 						System.out.println("게시물 번호를 입력해주세요.");
 						continue;
+					}else {
+						try {
+							Integer.parseInt(splitCommand[2]);
+						} catch(NumberFormatException ex) {
+							System.out.println("숫자를 입력해주세요.");
+							continue;
+						}
 					}
 					int id = Integer.parseInt(splitCommand[2]);
-					boolean findIdCheck = true;
+					boolean findIdCheck = false;
 					for (int i = 0; i < articles.size(); i++) {
 						if (articles.get(i).id == id) {
 							System.out.println(id + "번 게시물을 삭제하였습니다.");
 							articles.remove(i);
-							findIdCheck = false;
+							findIdCheck = true;
 						}
 					}
-					if (findIdCheck) {
+					if (!findIdCheck) {
 						System.out.println(id + "번 글은 존재하지 않습니다.");
 					}
 				}else {
