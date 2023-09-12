@@ -7,8 +7,8 @@ public class Main{
 		System.out.println("== 프로그램 시작 ==");
 		
 		Scanner sc = new Scanner(System.in);
-		int lastId = 1;
-		ArrayList<Article> arr = new ArrayList<>();
+		int lastArticleId = 0;
+		ArrayList<Article> articles = new ArrayList<>();
 		
 		while(true) {
 			System.out.print("명령어 ) ");
@@ -18,6 +18,7 @@ public class Main{
 			if(command.equals("exit")) break;
 			
 			if(command.equals("article write")) {			// 게시물 작성
+				int id = lastArticleId + 1;
 				String title;
 				String body;
 				while(true) {
@@ -38,18 +39,24 @@ public class Main{
 					}
 					break;
 				}
-				Article newArticle = new Article(lastId, title, body);
-				arr.add(newArticle);
-				System.out.println(lastId++ +"번 글이 생성되었습니다.");
+				Article newArticle = new Article(id, title, body);
+				
+				articles.add(newArticle);
+				
+				System.out.println(id +"번 글이 생성되었습니다.");
+				
+				lastArticleId++;
 				
 			}else if(command.equals("article list")) {		// 게시물 목록
-				if(arr.size() == 0) {
+				if(articles.size() == 0) {
 					System.out.println("게시글이 없습니다.");
 				}
-				for(int i = arr.size()-1; i >= 0; i--) {
-					System.out.println(arr.get(i).id + "번 글)");
-					System.out.println("제목: " + arr.get(i).title);
-					System.out.println("내용: " + arr.get(i).id);
+				
+				for(int i = articles.size()-1; i >= 0; i--) {
+					System.out.println("-----------------------------");
+					System.out.println(articles.get(i).id + "번 글 -");
+					System.out.println("제목: " + articles.get(i).title);
+					System.out.println("내용: " + articles.get(i).body);
 				}
 			}else {
 				System.out.println("존재하지 않는 명령어입니다.");
