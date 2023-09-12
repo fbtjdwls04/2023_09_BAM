@@ -1,10 +1,23 @@
 import java.util.Scanner;
 
-public class Main {
+public class Main{
+	static long cnt = 0;
 	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		String s = sc.nextLine();
+		System.out.println("== 프로그램 시작 ==");
 		
-		System.out.println("[" + s + "]");
+		Scanner sc = new Scanner(System.in);
+		
+		while(true) {
+			System.out.print("명령어) ");
+			String command = sc.nextLine();
+
+			if(command.equals("exit")) {
+				break;
+			}
+		}
+		
+		System.out.println("== 프로그램 끝 ==");
+		
+		sc.close();
 	}
 }
