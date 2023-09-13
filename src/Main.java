@@ -68,16 +68,8 @@ public class Main {
 					System.out.println("조회수 : " + article.hit);
 				}
 			} else if (command.startsWith("article detail")) {	// 게시물 개별 확인
-				if (splitCommand.length < 3) {
-					System.out.println("게시물 번호를 입력해주세요.");
+				if(!numberCheck(splitCommand)) {
 					continue;
-				} else {
-					try {
-						Integer.parseInt(splitCommand[2]);
-					} catch (NumberFormatException ex) {
-						System.out.println("숫자를 입력해주세요.");
-						continue;
-					}
 				}
 
 				int id = Integer.parseInt(splitCommand[2]);
@@ -101,16 +93,8 @@ public class Main {
 				}
 
 			} else if (command.startsWith("article delete")) {	// 게시물 삭제
-				if (splitCommand.length < 3) {
-					System.out.println("게시물 번호를 입력해주세요.");
+				if(!numberCheck(splitCommand)) {
 					continue;
-				} else {
-					try {
-						Integer.parseInt(splitCommand[2]);
-					} catch (NumberFormatException ex) {
-						System.out.println("숫자를 입력해주세요.");
-						continue;
-					}
 				}
 
 				int id = Integer.parseInt(splitCommand[2]);
@@ -127,16 +111,8 @@ public class Main {
 					System.out.println(id + "번 글은 존재하지 않습니다.");
 				}
 			}else if (command.startsWith("article modify")) {	// 게시물 삭제
-				if (splitCommand.length < 3) {
-					System.out.println("게시물 번호를 입력해주세요.");
+				if(!numberCheck(splitCommand)) {
 					continue;
-				} else {
-					try {
-						Integer.parseInt(splitCommand[2]);
-					} catch (NumberFormatException ex) {
-						System.out.println("숫자를 입력해주세요.");
-						continue;
-					}
 				}
 
 				int id = Integer.parseInt(splitCommand[2]);
@@ -165,6 +141,7 @@ public class Main {
 							break;
 						}
 						article.articleModify(title, body);
+						System.out.println(id + "번 글이 수정되었습니다.");
 						findIdCheck = true;
 						break;
 					}
@@ -181,6 +158,20 @@ public class Main {
 		System.out.println("== 프로그램 끝 ==");
 
 		sc.close();
+	}
+	static boolean numberCheck(String str[]) {
+		if (str.length < 3) {
+			System.out.println("게시물 번호를 입력해주세요.");
+			return false;
+		} else {
+			try {
+				Integer.parseInt(str[2]);
+			} catch (NumberFormatException ex) {
+				System.out.println("숫자를 입력해주세요.");
+				return false;
+			}
+		}
+		return true;
 	}
 }
 
