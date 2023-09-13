@@ -65,6 +65,7 @@ public class Main {
 					System.out.println("날짜 : " + article.regDate);
 					System.out.println("제목 : " + article.title);
 					System.out.println("내용 : " + article.body);
+					System.out.println("조회수 : " + article.hit);
 				}
 			} else if (command.startsWith("article detail")) {	// 게시물 개별 확인
 				if (splitCommand.length < 3) {
@@ -84,11 +85,13 @@ public class Main {
 				for (int i = 0; i < articles.size(); i++) {
 					Article article = articles.get(i);
 					if (article.id == id) {
+						article.hitUp();
 						System.out.println("-----------------------------");
 						System.out.println("번호 : " + article.id);
 						System.out.println("날짜 : " + article.regDate);
 						System.out.println("제목 : " + article.title);
 						System.out.println("내용 : " + article.body);
+						System.out.println("조회수 : " + article.hit);
 						findIdCheck = true;
 						break;
 					}
@@ -114,8 +117,8 @@ public class Main {
 				boolean findIdCheck = false;
 				for (int i = 0; i < articles.size(); i++) {
 					if (articles.get(i).id == id) {
-						System.out.println(id + "번 게시물을 삭제하였습니다.");
 						articles.remove(i);
+						System.out.println(id + "번 게시물을 삭제하였습니다.");
 						findIdCheck = true;
 						break;
 					}
@@ -123,7 +126,54 @@ public class Main {
 				if (!findIdCheck) {
 					System.out.println(id + "번 글은 존재하지 않습니다.");
 				}
-			} else {
+			}else if (command.startsWith("article modify")) {	// 게시물 삭제
+				if (splitCommand.length < 3) {
+					System.out.println("게시물 번호를 입력해주세요.");
+					continue;
+				} else {
+					try {
+						Integer.parseInt(splitCommand[2]);
+					} catch (NumberFormatException ex) {
+						System.out.println("숫자를 입력해주세요.");
+						continue;
+					}
+				}
+
+				int id = Integer.parseInt(splitCommand[2]);
+				boolean findIdCheck = false;
+				for (int i = 0; i < articles.size(); i++) {
+					Article article = articles.get(i);
+					if (article.id == id) {
+						String title;
+						String body;
+						while (true) {
+							System.out.print("제목 ) ");
+							title = sc.nextLine().trim();
+							if (title.length() == 0) {
+								System.out.println("제목을 입력해주세요.");
+								continue;
+							}
+							break;
+						}
+						while (true) {
+							System.out.print("내용 ) ");
+							body = sc.nextLine().trim();
+							if (body.length() == 0) {
+								System.out.println("내용을 입력해주세요.");
+								continue;
+							}
+							break;
+						}
+						article.articleModify(title, body);
+						findIdCheck = true;
+						break;
+					}
+				}
+				if (!findIdCheck) {
+					System.out.println(id + "번 글은 존재하지 않습니다.");
+				}
+			}
+			else {
 				System.out.println("존재하지 않는 명령어입니다.");
 			}
 		}
@@ -139,11 +189,20 @@ class Article {
 	String title;
 	String body;
 	String regDate;
+	int hit;
 
 	Article(int id, String title, String body, String regDate) {
 		this.id = id;
 		this.title = title;
 		this.body = body;
 		this.regDate = regDate;
+		this.hit = 0;
+	}
+	void articleModify(String title, String body) {
+		this.title = title;
+		this.body = body;
+	}
+	void hitUp() {
+		this.hit++;
 	}
 }
