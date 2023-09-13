@@ -13,7 +13,7 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		int lastArticleId = 0;
 		ArrayList<Article> articles = new ArrayList<>();
-
+		
 		while (true) {
 			System.out.print("명령어 ) ");
 			String command = sc.nextLine().trim();
@@ -59,12 +59,14 @@ public class Main {
 				}
 
 				for (int i = articles.size() - 1; i >= 0; i--) {
+					Article article = articles.get(i);
 					System.out.println("-----------------------------");
-					System.out.println(articles.get(i).id + "번 글 - " + articles.get(i).regDate);
-					System.out.println("제목: " + articles.get(i).title);
-					System.out.println("내용: " + articles.get(i).body);
+					System.out.println("번호 : " + article.id);
+					System.out.println("날짜 : " + article.regDate);
+					System.out.println("제목 : " + article.title);
+					System.out.println("내용 : " + article.body);
 				}
-			} else if (command.startsWith("article detail")) {
+			} else if (command.startsWith("article detail")) {	// 게시물 개별 확인
 				if (splitCommand.length < 3) {
 					System.out.println("게시물 번호를 입력해주세요.");
 					continue;
@@ -80,11 +82,13 @@ public class Main {
 				int id = Integer.parseInt(splitCommand[2]);
 				boolean findIdCheck = false;
 				for (int i = 0; i < articles.size(); i++) {
-					if (articles.get(i).id == id) {
+					Article article = articles.get(i);
+					if (article.id == id) {
 						System.out.println("-----------------------------");
-						System.out.println(id + "번 글 - " + articles.get(i).regDate);
-						System.out.println("제목: " + articles.get(i).title);
-						System.out.println("내용: " + articles.get(i).body);
+						System.out.println("번호 : " + article.id);
+						System.out.println("날짜 : " + article.regDate);
+						System.out.println("제목 : " + article.title);
+						System.out.println("내용 : " + article.body);
 						findIdCheck = true;
 						break;
 					}
@@ -93,7 +97,7 @@ public class Main {
 					System.out.println(id + "번 글은 존재하지 않습니다.");
 				}
 
-			} else if (command.startsWith("article delete")) {
+			} else if (command.startsWith("article delete")) {	// 게시물 삭제
 				if (splitCommand.length < 3) {
 					System.out.println("게시물 번호를 입력해주세요.");
 					continue;
