@@ -58,9 +58,9 @@ public class Main {
 
 					for (int i = articles.size() - 1; i >= 0; i--) {
 						System.out.println("-----------------------------");
-						System.out.println(articles.get(i).id + "번 글 -");
-						System.out.println("제목: " + articles.get(i).title);
-						System.out.println("내용: " + articles.get(i).body);
+						System.out.println(articles.get(i).getArticleId() + "번 글 -");
+						System.out.println("제목: " + articles.get(i).getArticleTitle());
+						System.out.println("내용: " + articles.get(i).getArticleBody());
 					}
 				} else if (splitCommand[1].equals("detail")) {
 					if (splitCommand.length < 3) {
@@ -77,11 +77,11 @@ public class Main {
 					int id = Integer.parseInt(splitCommand[2]);
 					boolean findIdCheck = false;
 					for (int i = 0; i < articles.size(); i++) {
-						if (articles.get(i).id == id) {
+						if (articles.get(i).getArticleId() == id) {
 							System.out.println("-----------------------------");
 							System.out.println(id + "번 글 -");
-							System.out.println("제목: " + articles.get(i).title);
-							System.out.println("내용: " + articles.get(i).body);
+							System.out.println("제목: " + articles.get(i).getArticleTitle());
+							System.out.println("내용: " + articles.get(i).getArticleBody());
 							findIdCheck = true;
 						}
 					}
@@ -104,7 +104,7 @@ public class Main {
 					int id = Integer.parseInt(splitCommand[2]);
 					boolean findIdCheck = false;
 					for (int i = 0; i < articles.size(); i++) {
-						if (articles.get(i).id == id) {
+						if (articles.get(i).getArticleId() == id) {
 							System.out.println(id + "번 게시물을 삭제하였습니다.");
 							articles.remove(i);
 							findIdCheck = true;
@@ -128,13 +128,22 @@ public class Main {
 }
 
 class Article {
-	int id;
-	String title;
-	String body;
+	private int id;
+	private String title;
+	private String body;
 
 	Article(int id, String title, String body) {
 		this.id = id;
 		this.title = title;
 		this.body = body;
+	}
+	int getArticleId(){
+		return this.id;
+	}
+	public String getArticleTitle() {
+		return this.title;
+	}
+	public String getArticleBody() {
+		return this.body;
 	}
 }
