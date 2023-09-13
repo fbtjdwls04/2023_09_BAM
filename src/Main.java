@@ -82,7 +82,7 @@ public class Main {
 				for (int i = 0; i < articles.size(); i++) {
 					if (articles.get(i).id == id) {
 						System.out.println("-----------------------------");
-						System.out.println(id + "번 글 - " + articles.get(i).id);
+						System.out.println(id + "번 글 - " + articles.get(i).regDate);
 						System.out.println("제목: " + articles.get(i).title);
 						System.out.println("내용: " + articles.get(i).body);
 						findIdCheck = true;
