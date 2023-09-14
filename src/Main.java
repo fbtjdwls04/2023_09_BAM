@@ -7,12 +7,12 @@ public class Main {
 	public static void main(String[] args) {
 		System.out.println("== 프로그램 시작 ==");
 
-		Date date = new Date();
 		SimpleDateFormat nDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
 		Scanner sc = new Scanner(System.in);
 		int lastArticleId = 0;
-		ArrayList<Article> articles = new ArrayList<>();
+		ArticleDao articleDao = new ArticleDao();
+		ArrayList<Article> articles = articleDao.articles;
 		
 		while (true) {
 			System.out.print("명령어 ) ");
@@ -45,6 +45,7 @@ public class Main {
 					}
 					break;
 				}
+				Date date = new Date(); 
 				Article newArticle = new Article(id, title, body, nDate.format(date));
 
 				articles.add(newArticle);
@@ -110,7 +111,7 @@ public class Main {
 				if (!findIdCheck) {
 					System.out.println(id + "번 글은 존재하지 않습니다.");
 				}
-			}else if (command.startsWith("article modify")) {	// 게시물 삭제
+			}else if (command.startsWith("article modify")) {	// 게시물 수정
 				if(!numberCheck(splitCommand)) {
 					continue;
 				}
@@ -158,20 +159,42 @@ public class Main {
 		System.out.println("== 프로그램 끝 ==");
 
 		sc.close();
+		
 	}
-	static boolean numberCheck(String str[]) {
-		if (str.length < 3) {
+	
+	static boolean numberCheck(String splitCommand[]) {
+		if (splitCommand.length < 3) {
 			System.out.println("게시물 번호를 입력해주세요.");
 			return false;
 		} else {
 			try {
-				Integer.parseInt(str[2]);
+				Integer.parseInt(splitCommand[2]);
 			} catch (NumberFormatException ex) {
 				System.out.println("숫자를 입력해주세요.");
 				return false;
 			}
 		}
 		return true;
+	}
+}
+
+class ArticleDao{
+	public ArrayList<Article> articles;
+	
+	public ArticleDao() {
+		articles = new ArrayList<>();
+	}
+	
+	public int findIndexById(int id) {
+		int index = -1;
+		for(int i = 0; i < articles.size(); i++) {
+			if(articles.get(i).id == id) {
+				index = i;
+				break;
+			}
+		}
+		
+		return index;
 	}
 }
 
