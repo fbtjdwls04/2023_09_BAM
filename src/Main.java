@@ -8,9 +8,13 @@ public class Main {
 
 		Scanner sc = new Scanner(System.in);
 		int lastArticleId = 0;
+		int lastUserId = 0;
 		ArticleDao articleDao = new ArticleDao();
+		MemberDao memberDao = new MemberDao();
 		ArrayList<Article> articles = articleDao.articles;
+		ArrayList<Member> members = memberDao.members;
 		
+		Member member = null;
 		while (true) {
 			System.out.print("명령어 ) ");
 			String command = sc.nextLine().trim();
@@ -20,7 +24,82 @@ public class Main {
 				continue;
 			if (command.equals("exit"))
 				break;
-			if (command.equals("article write")) { // 게시물 작성
+			if (command.equals("log in")) {
+				if(member != null) {
+					System.out.println("이미 로그인 중입니다.");
+					continue;
+				}
+				
+				String userId;
+				String password;
+				System.out.print("아이디 : ");
+				userId = sc.nextLine().trim();
+				System.out.print("비밀번호 : ");
+				password = sc.nextLine().trim();
+				Member temp = null;
+				for(int i = 0; i < members.size(); i++) {
+					if(members.get(i).userId.equals(userId)) {
+						temp = members.get(i);
+					}
+				}
+				if(temp == null) {
+					System.out.println("존재하지 않는 아이디입니다.");
+					continue;
+				}
+				if(!temp.password.equals(password)) {
+					System.out.println("비밀번호가 일치하지 않습니다.");
+					continue;
+				}
+				member = temp;
+				System.out.println(member.userId + "님 환영합니다.");
+				
+			}else if(command.equals("sign up")) {
+				boolean check = true;
+				String userId;
+				String password;
+				System.out.print("아이디 : ");
+				userId = sc.nextLine().trim();
+				for(int i = 0; i < members.size(); i++) {
+					if(members.get(i).userId.equals(userId)) {
+						System.out.println("이미 사용중인 아이디입니다.");
+						check = false;
+						break;
+					}
+				}
+				if(!check) {
+					continue;
+				}
+				System.out.print("비밀번호 : ");
+				password = sc.nextLine().trim();
+				while(true) {
+					System.out.print("비밀번호확인 : ");
+					String passwordTry = sc.nextLine().trim();
+					
+					if(password.equals(passwordTry)) {
+						break;
+					}
+					System.out.println("비밀번호가 동일하지 않습니다.");
+				}
+				int id = lastUserId + 1;
+				String regDate = Util.getNow();
+				Member newMember = new Member(id,userId,password,regDate);
+				members.add(newMember);
+				lastUserId++;
+				System.out.println("계정이 생성되었습니다.");
+				
+			}else if(command.equals("log out")) {
+				if(member == null) {
+					System.out.println("로그인 상태가 아닙니다.");
+					continue;
+				}
+				member = null;
+				System.out.println("로그아웃 되었습니다.");
+				
+			}else if (command.equals("article write")) { // 게시물 작성
+				if(member == null) {
+					System.out.println("로그인 후 사용이 가능합니다.");
+					continue;
+				}
 				int id = lastArticleId + 1;
 				String title;
 				String body;
@@ -42,13 +121,13 @@ public class Main {
 					}
 					break;
 				}
-				String date = Util.getNow();
-				Article newArticle = new Article(id, title, body, date);
+				String regDate = Util.getNow();
+				Article newArticle = new Article(id, member.userId, title, body, regDate);
 
 				articles.add(newArticle);
 
 				System.out.println(id + "번 글이 생성되었습니다.");
-				System.out.println(date);
+				System.out.println(regDate);
 				lastArticleId++;
 
 			} else if (command.equals("article list")) { // 게시물 목록
@@ -60,6 +139,7 @@ public class Main {
 					Article article = articles.get(i);
 					System.out.println("-----------------------------");
 					System.out.println("번호 : " + article.id);
+					System.out.println("글쓴이 : " + article.userId);
 					System.out.println("날짜 : " + article.regDate);
 					System.out.println("제목 : " + article.title);
 					System.out.println("내용 : " + article.body);
@@ -78,6 +158,7 @@ public class Main {
 						article.hitUp();
 						System.out.println("-----------------------------");
 						System.out.println("번호 : " + article.id);
+						System.out.println("글쓴이 : " + article.userId);
 						System.out.println("날짜 : " + article.regDate);
 						System.out.println("제목 : " + article.title);
 						System.out.println("내용 : " + article.body);
@@ -94,14 +175,22 @@ public class Main {
 				if(!numberCheck(splitCommand)) {
 					continue;
 				}
+				if(member == null) {
+					System.out.println("로그인 후 사용이 가능합니다.");
+					continue;
+				}
 
 				int id = Integer.parseInt(splitCommand[2]);
 				boolean findIdCheck = false;
 				for (int i = 0; i < articles.size(); i++) {
 					if (articles.get(i).id == id) {
+						findIdCheck = true;
+						if(!articles.get(i).userId.equals(member.userId)) {
+							System.out.println("권한이 없습니다.");
+							break;
+						}
 						articles.remove(i);
 						System.out.println(id + "번 게시물을 삭제하였습니다.");
-						findIdCheck = true;
 						break;
 					}
 				}
@@ -112,12 +201,21 @@ public class Main {
 				if(!numberCheck(splitCommand)) {
 					continue;
 				}
+				if(member == null) {
+					System.out.println("로그인 후 사용이 가능합니다.");
+					continue;
+				}
 
 				int id = Integer.parseInt(splitCommand[2]);
 				boolean findIdCheck = false;
 				for (int i = 0; i < articles.size(); i++) {
 					Article article = articles.get(i);
 					if (article.id == id) {
+						findIdCheck = true;
+						if(!article.userId.equals(member.userId)) {
+							System.out.println("권한이 없습니다.");
+							break;
+						}
 						String title;
 						String body;
 						while (true) {
@@ -140,7 +238,6 @@ public class Main {
 						}
 						article.articleModify(title, body);
 						System.out.println(id + "번 글이 수정되었습니다.");
-						findIdCheck = true;
 						break;
 					}
 				}
@@ -197,13 +294,15 @@ class ArticleDao{
 
 class Article {
 	int id;
+	String userId;
 	String title;
 	String body;
 	String regDate;
 	int hit;
 
-	Article(int id, String title, String body, String regDate) {
+	Article(int id, String userId,String title, String body, String regDate) {
 		this.id = id;
+		this.userId = userId;
 		this.title = title;
 		this.body = body;
 		this.regDate = regDate;
@@ -215,5 +314,26 @@ class Article {
 	}
 	void hitUp() {
 		this.hit++;
+	}
+}
+
+class Member {
+	int id;
+	String userId;
+	String password;
+	String regDate;
+	
+	Member(int id, String userId, String password, String regDate){
+		this.id = id;
+		this.userId = userId;
+		this.password = password;
+		this.regDate = regDate;
+	}
+}
+
+class MemberDao {
+	ArrayList<Member> members;
+	MemberDao(){
+		members = new ArrayList<>();
 	}
 }
