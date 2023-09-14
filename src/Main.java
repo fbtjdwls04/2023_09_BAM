@@ -1,8 +1,6 @@
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 
 public class Main {
 	public static void main(String[] args) {
@@ -44,7 +42,7 @@ public class Main {
 					}
 					break;
 				}
-				String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
+				String date = Util.getNow();
 				Article newArticle = new Article(id, title, body, date);
 
 				articles.add(newArticle);
