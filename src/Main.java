@@ -1,13 +1,12 @@
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Scanner;
 
 public class Main {
 	public static void main(String[] args) {
 		System.out.println("== 프로그램 시작 ==");
-
-		SimpleDateFormat nDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
 		Scanner sc = new Scanner(System.in);
 		int lastArticleId = 0;
@@ -45,13 +44,13 @@ public class Main {
 					}
 					break;
 				}
-				Date date = new Date(); 
-				Article newArticle = new Article(id, title, body, nDate.format(date));
+				String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
+				Article newArticle = new Article(id, title, body, date);
 
 				articles.add(newArticle);
 
 				System.out.println(id + "번 글이 생성되었습니다.");
-				System.out.println(nDate.format(date));
+				System.out.println(date);
 				lastArticleId++;
 
 			} else if (command.equals("article list")) { // 게시물 목록
