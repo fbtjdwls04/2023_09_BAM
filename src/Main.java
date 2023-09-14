@@ -32,6 +32,7 @@ public class Main {
 				
 				String userId;
 				String password;
+				
 				System.out.print("아이디 : ");
 				userId = sc.nextLine().trim();
 				System.out.print("비밀번호 : ");
@@ -57,6 +58,7 @@ public class Main {
 				boolean check = true;
 				String userId;
 				String password;
+				
 				System.out.print("아이디 : ");
 				userId = sc.nextLine().trim();
 				for(int i = 0; i < members.size(); i++) {
@@ -122,7 +124,7 @@ public class Main {
 					break;
 				}
 				String regDate = Util.getNow();
-				Article newArticle = new Article(id, member.userId, title, body, regDate);
+				Article newArticle = new Article(id, member.userId, title, body, regDate, regDate);
 
 				articles.add(newArticle);
 
@@ -141,10 +143,12 @@ public class Main {
 					System.out.println("번호 : " + article.id);
 					System.out.println("글쓴이 : " + article.userId);
 					System.out.println("날짜 : " + article.regDate);
+					System.out.println("수정된 날짜 : " + article.updateDate);
 					System.out.println("제목 : " + article.title);
 					System.out.println("내용 : " + article.body);
 					System.out.println("조회수 : " + article.hit);
 				}
+				
 			} else if (command.startsWith("article detail")) {	// 게시물 개별 확인
 				if(!numberCheck(splitCommand)) {
 					continue;
@@ -155,15 +159,16 @@ public class Main {
 				for (int i = 0; i < articles.size(); i++) {
 					Article article = articles.get(i);
 					if (article.id == id) {
+						findIdCheck = true;
 						article.hitUp();
 						System.out.println("-----------------------------");
 						System.out.println("번호 : " + article.id);
 						System.out.println("글쓴이 : " + article.userId);
 						System.out.println("날짜 : " + article.regDate);
+						System.out.println("수정된 날짜 : " + article.updateDate);
 						System.out.println("제목 : " + article.title);
 						System.out.println("내용 : " + article.body);
 						System.out.println("조회수 : " + article.hit);
-						findIdCheck = true;
 						break;
 					}
 				}
@@ -197,6 +202,7 @@ public class Main {
 				if (!findIdCheck) {
 					System.out.println(id + "번 글은 존재하지 않습니다.");
 				}
+				
 			}else if (command.startsWith("article modify")) {	// 게시물 수정
 				if(!numberCheck(splitCommand)) {
 					continue;
@@ -236,7 +242,8 @@ public class Main {
 							}
 							break;
 						}
-						article.articleModify(title, body);
+						String updateDate = Util.getNow();
+						article.articleModify(title, body, updateDate);
 						System.out.println(id + "번 글이 수정되었습니다.");
 						break;
 					}
@@ -298,22 +305,32 @@ class Article {
 	String title;
 	String body;
 	String regDate;
+	String updateDate;
 	int hit;
 
-	Article(int id, String userId,String title, String body, String regDate) {
+	Article(int id, String userId,String title, String body, String regDate, String updateDate) {
 		this.id = id;
 		this.userId = userId;
 		this.title = title;
 		this.body = body;
 		this.regDate = regDate;
+		this.updateDate = updateDate;
 		this.hit = 0;
 	}
-	void articleModify(String title, String body) {
+	void articleModify(String title, String body,String updateDate) {
 		this.title = title;
 		this.body = body;
+		this.updateDate = updateDate;
 	}
 	void hitUp() {
 		this.hit++;
+	}
+}
+
+class MemberDao {
+	ArrayList<Member> members;
+	MemberDao(){
+		members = new ArrayList<>();
 	}
 }
 
@@ -331,9 +348,3 @@ class Member {
 	}
 }
 
-class MemberDao {
-	ArrayList<Member> members;
-	MemberDao(){
-		members = new ArrayList<>();
-	}
-}
