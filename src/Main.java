@@ -12,7 +12,7 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		ArrayList<Article> articles = articleDao.articles;
 		ArrayList<Member> members = memberDao.members;
-		makeTestData();
+		makeTestData(4);
 		
 		Member member = null;
 		while (true) {
@@ -264,10 +264,11 @@ public class Main {
 		return true;
 	}
 	
-	static void makeTestData() {
-		articleDao.add(new Article(++lastArticleId, "테스트", "안녕","반갑다",Util.getNow(),Util.getNow()));
-		articleDao.add(new Article(++lastArticleId, "테스트", "안녕","반갑다",Util.getNow(),Util.getNow()));
-		articleDao.add(new Article(++lastArticleId, "테스트", "안녕","반갑다",Util.getNow(),Util.getNow()));
+	static void makeTestData(int cnt) {
+		for(int i = 0; i < cnt; i++) {
+			articleDao.add(new Article(++lastArticleId, "테스트", "안녕","반갑다",Util.getNow(),Util.getNow(),10));
+		}
+		System.out.printf("테스트를 위한 데이터 %d개 생성 완료.\n",cnt);
 	}
 }
 
@@ -292,6 +293,9 @@ class ArticleDao {
 	public void add(Article article) {
 		articles.add(article);
 	}
+	public void remove(int index) {
+		articles.remove(index);
+	}
 }
 
 class Article {
@@ -302,15 +306,17 @@ class Article {
 	String regDate;
 	String updateDate;
 	int hit;
-
 	Article(int id, String userId, String title, String body, String regDate, String updateDate) {
+		this(id, userId,title,body,regDate,updateDate,0);
+	}
+	Article(int id, String userId, String title, String body, String regDate, String updateDate, int hit) {
 		this.id = id;
 		this.userId = userId;
 		this.title = title;
 		this.body = body;
 		this.regDate = regDate;
 		this.updateDate = updateDate;
-		this.hit = 0;
+		this.hit = hit;
 	}
 
 	void articleModify(String title, String body, String updateDate) {
