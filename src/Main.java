@@ -16,7 +16,7 @@ public class Main {
 		
 		Member member = null;
 		while (true) {
-			System.out.print("명령어 ) ");
+			System.out.print(member == null ? "명령어 ) " : member.userId + " )명령어 ) ");
 			String command = sc.nextLine().trim();
 			String splitCommand[] = command.split(" ");
 
@@ -24,7 +24,7 @@ public class Main {
 				continue;
 			if (command.equals("exit"))
 				break;
-			if (command.equals("log in")) {
+			if (command.equals("login")) {
 				if (member != null) {
 					System.out.println("이미 로그인 중입니다.");
 					continue;
@@ -32,11 +32,25 @@ public class Main {
 
 				String userId;
 				String password;
-
-				System.out.print("아이디 : ");
-				userId = sc.nextLine().trim();
-				System.out.print("비밀번호 : ");
-				password = sc.nextLine().trim();
+				
+				while(true) {
+					System.out.print("아이디 : ");
+					userId = sc.nextLine().trim();
+					if(userId.length() == 0) {
+						System.out.println("아이디를 입력해주세요.");
+						continue;
+					}
+					break;
+				}
+				while(true) {
+					System.out.print("비밀번호 : ");
+					password = sc.nextLine().trim();
+					if(password.length() == 0) {
+						System.out.println("비밀번호를 입력해주세요.");
+						continue;
+					}
+					break;
+				}
 				Member temp = null;
 				for (int i = 0; i < members.size(); i++) {
 					if (members.get(i).userId.equals(userId)) {
@@ -54,25 +68,41 @@ public class Main {
 				member = temp;
 				System.out.println(member.userId + "님 환영합니다.");
 
-			} else if (command.equals("sign up")) {
-				boolean check = true;
+			} else if (command.equals("join")) {
 				String userId;
 				String password;
-
-				System.out.print("아이디 : ");
-				userId = sc.nextLine().trim();
-				for (int i = 0; i < members.size(); i++) {
-					if (members.get(i).userId.equals(userId)) {
-						System.out.println("이미 사용중인 아이디입니다.");
-						check = false;
+				while(true) {
+					boolean check = true;
+					while(true) {
+						System.out.print("아이디 : ");
+						userId = sc.nextLine().trim();
+						if(userId.length() == 0) {
+							System.out.println("아이디를 입력해주세요");
+							continue;
+						}
+						break;
+					}
+					
+					for (int i = 0; i < members.size(); i++) {
+						if (members.get(i).userId.equals(userId)) {
+							System.out.println("이미 사용중인 아이디입니다.");
+							check = false;
+							break;
+						}
+					}
+					if (check) {
 						break;
 					}
 				}
-				if (!check) {
-					continue;
+				while(true) {
+					System.out.print("비밀번호 : ");
+					password = sc.nextLine().trim();
+					if(password.length() == 0) {
+						System.out.println("비밀번호를 입력해주세요.");
+						continue;
+					}
+					break;
 				}
-				System.out.print("비밀번호 : ");
-				password = sc.nextLine().trim();
 				while (true) {
 					System.out.print("비밀번호확인 : ");
 					String passwordTry = sc.nextLine().trim();
@@ -89,7 +119,7 @@ public class Main {
 				lastUserId++;
 				System.out.println("계정이 생성되었습니다.");
 
-			} else if (command.equals("log out")) {
+			} else if (command.equals("logout")) {
 				if (member == null) {
 					System.out.println("로그인 상태가 아닙니다.");
 					continue;
