@@ -16,7 +16,7 @@ public class Main {
 		
 		Member member = null;
 		while (true) {
-			System.out.print(member == null ? "명령어 ) " : member.userId + " )명령어 ) ");
+			System.out.print(member == null ? "명령어 ) " : member.userId + " ) 명령어 ) ");
 			String command = sc.nextLine().trim();
 			String splitCommand[] = command.split(" ");
 
@@ -162,21 +162,26 @@ public class Main {
 				System.out.println(regDate);
 				lastArticleId++;
 
-			} else if (command.equals("article list")) { // 게시물 목록
+			} else if (command.startsWith("article list")) { // 게시물 목록
 				if (articles.size() == 0) {
 					System.out.println("게시글이 없습니다.");
 				}
-
-				for (int i = articles.size() - 1; i >= 0; i--) {
-					Article article = articles.get(i);
-					System.out.println("-----------------------------");
-					System.out.println("번호 : " + article.id);
-					System.out.println("글쓴이 : " + article.userId);
-					System.out.println("날짜 : " + article.regDate);
-					System.out.println("수정된 날짜 : " + article.updateDate);
-					System.out.println("제목 : " + article.title);
-					System.out.println("내용 : " + article.body);
-					System.out.println("조회수 : " + article.hit);
+				// 검색어가 없을 시
+				if (splitCommand.length == 2) {
+					for (int i = articles.size() - 1; i >= 0; i--) {
+						Article article = articles.get(i);
+						articleDao.printArticle(article);
+					}
+				
+				}
+				// 검색어가 있을 시
+				else {
+					for (int i = articles.size() - 1; i >= 0; i--) {
+						Article article = articles.get(i);
+						if(article.title.contains(splitCommand[2])) {
+							articleDao.printArticle(article);
+						}
+					}
 				}
 
 			} else if (command.startsWith("article detail")) { // 게시물 개별 확인
@@ -192,14 +197,7 @@ public class Main {
 				}
 				Article article = articles.get(findIndex);
 				article.hitUp();
-				System.out.println("-----------------------------");
-				System.out.println("번호 : " + article.id);
-				System.out.println("글쓴이 : " + article.userId);
-				System.out.println("날짜 : " + article.regDate);
-				System.out.println("수정된 날짜 : " + article.updateDate);
-				System.out.println("제목 : " + article.title);
-				System.out.println("내용 : " + article.body);
-				System.out.println("조회수 : " + article.hit);
+				articleDao.printArticle(article);
 
 			} else if (command.startsWith("article delete")) { // 게시물 삭제
 				if (!numberCheck(splitCommand)) {
@@ -279,7 +277,7 @@ public class Main {
 
 	}
 
-	static boolean numberCheck(String splitCommand[]) {
+	private static boolean numberCheck(String splitCommand[]) {
 		if (splitCommand.length < 3) {
 			System.out.println("게시물 번호를 입력해주세요.");
 			return false;
@@ -294,7 +292,7 @@ public class Main {
 		return true;
 	}
 	
-	static void makeTestData(int cnt) {
+	private static void makeTestData(int cnt) {
 		for(int i = 0; i < cnt; i++) {
 			articleDao.add(new Article(++lastArticleId, "테스트", "안녕","반갑다",Util.getNow(),Util.getNow(),10));
 		}
@@ -317,9 +315,20 @@ class ArticleDao {
 				break;
 			}
 		}
-
 		return index;
 	}
+	
+	public void printArticle(Article article) {
+		System.out.println("-----------------------------");
+		System.out.println("번호 : " + article.id);
+		System.out.println("글쓴이 : " + article.userId);
+		System.out.println("날짜 : " + article.regDate);
+		System.out.println("수정된 날짜 : " + article.updateDate);
+		System.out.println("제목 : " + article.title);
+		System.out.println("내용 : " + article.body);
+		System.out.println("조회수 : " + article.hit);
+	}
+	
 	public void add(Article article) {
 		articles.add(article);
 	}
