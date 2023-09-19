@@ -56,6 +56,7 @@ public class Main {
 				for (int i = 0; i < members.size(); i++) {
 					if (members.get(i).userId.equals(userId)) {
 						temp = members.get(i);
+						break;
 					}
 				}
 				if (temp == null) {
@@ -72,8 +73,11 @@ public class Main {
 			}
 			// 회원 가입
 			else if (command.equals("join")) {
+				
 				String userId;
 				String password;
+				String name;
+				
 				while(true) {
 					boolean check = true;
 					while(true) {
@@ -115,12 +119,22 @@ public class Main {
 					}
 					System.out.println("비밀번호가 동일하지 않습니다.");
 				}
+				
+				while(true) {
+					System.out.print("이름 : ");
+					name = sc.nextLine().trim();
+					if(userId.length() == 0) {
+						System.out.println("이름을 입력해주세요");
+						continue;
+					}
+					break;
+				}
 				int id = lastUserId + 1;
 				String regDate = Util.getNow();
-				Member newMember = new Member(id, userId, password, regDate);
+				Member newMember = new Member(id, userId, password, name,regDate);
 				members.add(newMember);
 				lastUserId++;
-				System.out.println("계정이 생성되었습니다.");
+				System.out.println(id+"번 계정이 생성되었습니다.");
 
 			}
 			// 로그 아웃
@@ -221,16 +235,16 @@ public class Main {
 				}
 
 				int id = Integer.parseInt(splitCommand[2]);
-				int findIndex = articleDao.getArticleIndexById(id);
-				if (findIndex == -1) {
+				Article article = articleDao.getArticleById(id);
+				if (article == null) {
 					System.out.println(id + "번 글은 존재하지 않습니다.");
 					continue;
 				}
-				if (!articles.get(findIndex).userId.equals(member.userId)) {
+				if (!article.userId.equals(member.userId)) {
 					System.out.println("권한이 없습니다.");
 					continue;
 				}
-				articles.remove(findIndex);
+				articles.remove(article);
 				System.out.println(id + "번 게시물을 삭제하였습니다.");
 
 			}
@@ -353,8 +367,8 @@ class ArticleDao {
 	public void add(Article article) {
 		articles.add(article);
 	}
-	public void remove(int index) {
-		articles.remove(index);
+	public void remove(Article article) {
+		articles.remove(article);
 	}
 }
 
@@ -403,11 +417,13 @@ class Member {
 	String userId;
 	String password;
 	String regDate;
+	String name;
 
-	Member(int id, String userId, String password, String regDate) {
+	Member(int id, String userId, String password,String name,String regDate) {
 		this.id = id;
 		this.userId = userId;
 		this.password = password;
 		this.regDate = regDate;
+		this.name = name;
 	}
 }
