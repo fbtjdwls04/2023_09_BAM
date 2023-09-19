@@ -14,9 +14,9 @@ public class Main {
 		ArrayList<Member> members = memberDao.members;
 		makeTestData(4);
 		
-		Member member = null;
+		Member loginMember = null;
 		while (true) {
-			System.out.print(member == null ? "명령어 ) " : member.userId + " ) 명령어 ) ");
+			System.out.print(loginMember == null ? "명령어 ) " : loginMember.userId + " ) 명령어 ) ");
 			String command = sc.nextLine().trim();
 			String splitCommand[] = command.split(" ");
 
@@ -26,7 +26,7 @@ public class Main {
 				break;
 			// 로그인
 			if (command.equals("login")) {
-				if (member != null) {
+				if (loginMember != null) {
 					System.out.println("이미 로그인 중입니다.");
 					continue;
 				}
@@ -67,8 +67,8 @@ public class Main {
 					System.out.println("비밀번호가 일치하지 않습니다.");
 					continue;
 				}
-				member = temp;
-				System.out.println(member.userId + "님 환영합니다.");
+				loginMember = temp;
+				System.out.println(loginMember.userId + "님 환영합니다.");
 
 			}
 			// 회원 가입
@@ -79,28 +79,21 @@ public class Main {
 				String name;
 				
 				while(true) {
-					boolean check = true;
-					while(true) {
-						System.out.print("아이디 : ");
-						userId = sc.nextLine().trim();
-						if(userId.length() == 0) {
-							System.out.println("아이디를 입력해주세요");
-							continue;
-						}
-						break;
+					System.out.print("아이디 : ");
+					userId = sc.nextLine().trim();
+					if(userId.length() == 0) {
+						System.out.println("아이디를 입력해주세요");
+						continue;
 					}
 					
-					for (int i = 0; i < members.size(); i++) {
-						if (members.get(i).userId.equals(userId)) {
-							System.out.println("이미 사용중인 아이디입니다.");
-							check = false;
-							break;
-						}
+					if (memberDao.isJoinableUserId(userId)) {
+						System.out.println("이미 사용중인 아이디입니다.");
+						continue;
 					}
-					if (check) {
-						break;
-					}
+					
+					break;
 				}
+				
 				while(true) {
 					System.out.print("비밀번호 : ");
 					password = sc.nextLine().trim();
@@ -139,17 +132,17 @@ public class Main {
 			}
 			// 로그 아웃
 			else if (command.equals("logout")) {
-				if (member == null) {
+				if (loginMember == null) {
 					System.out.println("로그인 상태가 아닙니다.");
 					continue;
 				}
-				member = null;
+				loginMember = null;
 				System.out.println("로그아웃 되었습니다.");
 
 			} 
 			// 게시물 작성
 			else if (command.equals("article write")) { 
-				if (member == null) {
+				if (loginMember == null) {
 					System.out.println("로그인 후 사용이 가능합니다.");
 					continue;
 				}
@@ -175,7 +168,7 @@ public class Main {
 					break;
 				}
 				String regDate = Util.getNow();
-				Article newArticle = new Article(id, member.userId, title, body, regDate, regDate);
+				Article newArticle = new Article(id, loginMember.userId, title, body, regDate, regDate);
 
 				articles.add(newArticle);
 
@@ -229,7 +222,7 @@ public class Main {
 				if (!numberCheck(splitCommand)) {
 					continue;
 				}
-				if (member == null) {
+				if (loginMember == null) {
 					System.out.println("로그인 후 사용이 가능합니다.");
 					continue;
 				}
@@ -240,7 +233,7 @@ public class Main {
 					System.out.println(id + "번 글은 존재하지 않습니다.");
 					continue;
 				}
-				if (!article.userId.equals(member.userId)) {
+				if (!article.userId.equals(loginMember.userId)) {
 					System.out.println("권한이 없습니다.");
 					continue;
 				}
@@ -253,7 +246,7 @@ public class Main {
 				if (!numberCheck(splitCommand)) {
 					continue;
 				}
-				if (member == null) {
+				if (loginMember == null) {
 					System.out.println("로그인 후 사용이 가능합니다.");
 					continue;
 				}
@@ -264,7 +257,7 @@ public class Main {
 					System.out.println(id + "번 글은 존재하지 않습니다.");
 					continue;
 				}
-				if (!article.userId.equals(member.userId)) {
+				if (!article.userId.equals(loginMember.userId)) {
 					System.out.println("권한이 없습니다.");
 					continue;
 				}
@@ -343,7 +336,7 @@ class ArticleDao {
 	public ArticleDao() {
 		articles = new ArrayList<>();
 	}
-	// 찾고자 하는 id로 article 유무 확인
+	
 	public int getArticleIndexById(int id) {
 		int index = -1;
 		for (int i = 0; i < articles.size(); i++) {
@@ -410,6 +403,15 @@ class MemberDao {
 	MemberDao() {
 		members = new ArrayList<>();
 	}
+
+	public boolean isJoinableUserId(String userId) {
+		for(Member member : members) {
+			if(member.userId.equals(userId)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
 
 class Member {
@@ -426,4 +428,5 @@ class Member {
 		this.regDate = regDate;
 		this.name = name;
 	}
+	
 }
