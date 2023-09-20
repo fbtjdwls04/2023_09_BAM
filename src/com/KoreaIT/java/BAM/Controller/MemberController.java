@@ -17,6 +17,13 @@ public class MemberController extends Controller{
 		this.sc = sc;
 		memberService = new MemberService();
 	}
+	public void makeTestData() {
+		memberService.join(new Member(memberService.getNewId(), "admin", "admin", "운영자", Util.getNow()));
+		memberService.join(new Member(memberService.getNewId(), "a", "a", "회원1", Util.getNow()));
+		memberService.join(new Member(memberService.getNewId(), "b", "b", "회원2", Util.getNow()));
+		
+		System.out.println("테스트를 위한 계정 3개 생성 완료.");
+	}
 	public void doAction(String command, String methodCommand) {
 		this.command = command;
 		this.methodCommand = methodCommand;
@@ -99,7 +106,7 @@ public class MemberController extends Controller{
 		}
 	}
 	private void doLogin() {
-		if (loginMember != null) {
+		if (isLogined()) {
 			System.out.println("이미 로그인 중입니다.");
 			return;
 		}
@@ -142,7 +149,7 @@ public class MemberController extends Controller{
 		
 	}
 	private void doLogout() {
-		if (loginMember == null) {
+		if (!isLogined()) {
 			System.out.println("로그인 상태가 아닙니다.");
 			return;
 		}

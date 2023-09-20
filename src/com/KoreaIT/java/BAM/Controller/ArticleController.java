@@ -54,12 +54,12 @@ public class ArticleController extends Controller {
 		System.out.println("조회수 : " + article.hit);
 	}
 	
-	public void makeTestData(int cnt) {
-		for (int i = 1; i <= cnt; i++) {
-			int id = articleService.getNewId();
-			articleService.add(new Article(id, "이름" + id, "안녕" + id, "반갑다", Util.getNow(), Util.getNow(), 10));
-		}
-		System.out.printf("테스트를 위한 데이터 %d개 생성 완료.\n", cnt);
+	public void makeTestData() {
+		articleService.add(new Article(articleService.getNewId(), "admin" , "제목1", "저쩔", Util.getNow(), Util.getNow(), 15));
+		articleService.add(new Article(articleService.getNewId(), "a" , "제목2", "어쩔", Util.getNow(), Util.getNow(), 12));
+		articleService.add(new Article(articleService.getNewId(), "b" , "제목3", "ㅎㅇㅎㅇ", Util.getNow(), Util.getNow(), 4));
+
+		System.out.println("테스트를 위한 데이터 3개 생성 완료.");
 	}
 	
 	private boolean numberCheck(String splitCommand[]) {
@@ -78,7 +78,7 @@ public class ArticleController extends Controller {
 	}
 
 	private void doWrite() {
-		if (loginMember == null) {
+		if (!isLogined()) {
 			System.out.println("로그인 후 사용이 가능합니다.");
 			return;
 		}
@@ -164,7 +164,7 @@ public class ArticleController extends Controller {
 		if (!numberCheck(splitCommand)) {
 			return;
 		}
-		if (loginMember == null) {
+		if (!isLogined()) {
 			System.out.println("로그인 후 사용이 가능합니다.");
 			return;
 		}
@@ -186,7 +186,7 @@ public class ArticleController extends Controller {
 		if (!numberCheck(splitCommand)) {
 			return;
 		}
-		if (loginMember == null) {
+		if (!isLogined()) {
 			System.out.println("로그인 후 사용이 가능합니다.");
 			return;
 		}
