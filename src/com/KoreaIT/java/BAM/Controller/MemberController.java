@@ -37,6 +37,9 @@ public class MemberController extends Controller{
 		case "logout" :
 			doLogout();
 			break;
+		case "mypage" :
+			doMypage();
+			break;
 		default :
 			System.out.println("존재하지 않는 명령어입니다.");
 			break;
@@ -156,6 +159,18 @@ public class MemberController extends Controller{
 		loginMember = null;
 		System.out.println("로그아웃 되었습니다.");
 		
+	}
+
+	private void doMypage() {
+		if(!isLogined()) {
+			System.out.println("로그인 상태가 아닙니다.");
+			return;
+		}
+		System.out.println("-----------------------------");
+		System.out.println("회원 번호 : " + loginMember.id);
+		System.out.println("가입 일 : " + loginMember.regDate);
+		System.out.println("아이디 : " + loginMember.userId);
+		System.out.println("이름 : " + loginMember.name);
 	}
 }
 
