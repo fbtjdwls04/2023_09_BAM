@@ -39,6 +39,12 @@ public class MemberController extends Controller{
 		case "mypage" :
 			doMypage();
 			break;
+		case "secession":
+			doSecession();
+			break;
+		case "list":
+			showList();
+			break;
 		default :
 			System.out.println("존재하지 않는 명령어입니다.");
 			break;
@@ -168,6 +174,33 @@ public class MemberController extends Controller{
 		System.out.println("가입 일 : " + loginMember.regDate);
 		System.out.println("아이디 : " + loginMember.loginId);
 		System.out.println("이름 : " + loginMember.name);
+	}
+	private void doSecession() {
+		if(!isLogined()) {
+			System.out.println("로그인 상태가 아닙니다.");
+			return;
+		}
+		if(loginMember.memberId == 1) {
+			System.out.println("관리자 계정은 삭제할 수 없습니다.");
+			return;
+		}
+		System.out.println("정말 탈퇴하시겠습니까? (y or n)");
+		String confirm = sc.nextLine();
+		if(confirm.equals("n")) return;
+		else if(confirm.equals("y")) {
+			memberService.remove(loginMember);
+			loginMember = null;
+			System.out.println("회원 탈퇴가 완료되었습니다.");
+		}
+	}
+	private void showList() {
+		if(loginMember == null || loginMember.memberId != 1) {
+			System.out.println("관리자만 사용 가능합니다.");
+			return;
+		}
+		for(Member member : memberService.getMembers()) {
+			System.out.printf("회원번호 : %d | 아이디 : %s | 비밀번호 : %s | 이름 : %s | 생성일 : %s\n",member.memberId, member.loginId, member.password, member.name, member.regDate);
+		}
 	}
 }
 

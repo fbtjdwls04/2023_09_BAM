@@ -41,4 +41,16 @@ public class MemberDao extends Dao {
 		members.add(member);
 		lastId = member.memberId;
 	}
+
+	public void remove(Member loginMember) {
+		members.remove(loginMember);
+	}
+
+	public int size() {
+		return members.size();
+	}
+
+	public ArrayList<Member> getMembers() {
+		return members;
+	}
 }

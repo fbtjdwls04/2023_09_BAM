@@ -1,5 +1,7 @@
 package com.KoreaIT.java.BAM.Service;
 
+import java.util.ArrayList;
+
 import com.KoreaIT.java.BAM.Container.Container;
 import com.KoreaIT.java.BAM.Dao.MemberDao;
 import com.KoreaIT.java.BAM.dto.Member;
@@ -21,5 +23,14 @@ public class MemberService {
 	}
 	public int getNewId() {
 		return memberDao.getNewId();
+	}
+	public void remove(Member loginMember) {
+		memberDao.remove(loginMember);
+	}
+	public int size() {
+		return memberDao.size();
+	}
+	public ArrayList<Member> getMembers() {
+		return memberDao.getMembers();
 	}
 }

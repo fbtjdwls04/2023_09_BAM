@@ -175,7 +175,7 @@ public class ArticleController extends Controller {
 			System.out.println(id + "번 글은 존재하지 않습니다.");
 			return;
 		}
-		if (article.memberId != loginMember.memberId) {
+		if (article.memberId != loginMember.memberId && loginMember.memberId != 1) {
 			System.out.println("권한이 없습니다.");
 			return;
 		}
