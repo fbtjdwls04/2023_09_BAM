@@ -22,7 +22,7 @@ public class MemberDao extends Dao {
 	public int getMemberIndexByLoginId(String loginId) {
 		int index = -1;
 		for (int i = 0; i < members.size(); i++) {
-			if (members.get(i).userId.equals(loginId)) {
+			if (members.get(i).loginId.equals(loginId)) {
 				return i;
 			}
 		}
@@ -30,17 +30,15 @@ public class MemberDao extends Dao {
 	}
 	public Member getMemberByLoginId(String loginId) {
 		Member member = null;
-		for (int i = 0; i < members.size(); i++) {
-			if (members.get(i).userId.equals(loginId)) {
-				member = members.get(i);
-				return member;
-			}
+		int index = getMemberIndexByLoginId(loginId);
+		if(index == -1) {
+			return member;
 		}
-		return member;
+		return members.get(index);
 	}
 
 	public void add(Member member) {
 		members.add(member);
-		lastId = member.id;
+		lastId = member.memberId;
 	}
 }

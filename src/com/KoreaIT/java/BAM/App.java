@@ -28,7 +28,7 @@ public class App {
 				break;
 			else if(splitCommand.length == 1) {
 				System.out.println("존재하지 않는 명령어입니다.");
-				return;
+				continue;
 			}
 			else if(command.startsWith("member")) {
 				controller = memberController;

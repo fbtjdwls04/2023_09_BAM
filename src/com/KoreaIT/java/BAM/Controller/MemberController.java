@@ -7,7 +7,6 @@ import com.KoreaIT.java.BAM.Util.Util;
 import com.KoreaIT.java.BAM.dto.Member;
 
 public class MemberController extends Controller{
-	public int lastUserId = 0;
 	String command;
 	String methodCommand;
 	MemberService memberService; 
@@ -97,12 +96,11 @@ public class MemberController extends Controller{
 			break;
 		}
 		
-		int id = lastUserId + 1;
+		int memberId = memberService.getNewId();
 		String regDate = Util.getNow();
-		Member newMember = new Member(id, loginId, password, name, regDate);
+		Member newMember = new Member(memberId, loginId, password, name, regDate);
 		memberService.join(newMember);
-		lastUserId++;
-		System.out.println(id + "번 계정이 생성되었습니다.");
+		System.out.println(memberId + "번 계정이 생성되었습니다.");
 		if (command.equals("member login")) {
 			
 
@@ -148,7 +146,7 @@ public class MemberController extends Controller{
 		}
 		
 		loginMember = temp;
-		System.out.println(loginMember.userId + "님 환영합니다.");
+		System.out.println(loginMember.name + "님 환영합니다.");
 		
 	}
 	private void doLogout() {
@@ -158,7 +156,6 @@ public class MemberController extends Controller{
 		}
 		loginMember = null;
 		System.out.println("로그아웃 되었습니다.");
-		
 	}
 
 	private void doMypage() {
@@ -167,9 +164,9 @@ public class MemberController extends Controller{
 			return;
 		}
 		System.out.println("-----------------------------");
-		System.out.println("회원 번호 : " + loginMember.id);
+		System.out.println("회원 번호 : " + loginMember.memberId);
 		System.out.println("가입 일 : " + loginMember.regDate);
-		System.out.println("아이디 : " + loginMember.userId);
+		System.out.println("아이디 : " + loginMember.loginId);
 		System.out.println("이름 : " + loginMember.name);
 	}
 }

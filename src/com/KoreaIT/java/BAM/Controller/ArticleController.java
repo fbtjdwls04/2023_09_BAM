@@ -46,18 +46,18 @@ public class ArticleController extends Controller {
 	private void printArticle(Article article) {
 		System.out.println("-----------------------------");
 		System.out.println("번호 : " + article.id);
-		System.out.println("글쓴이 : " + article.userId);
 		System.out.println("날짜 : " + article.regDate);
 		System.out.println("수정된 날짜 : " + article.updateDate);
+		System.out.println("글쓴이 : " + article.name);
 		System.out.println("제목 : " + article.title);
 		System.out.println("내용 : " + article.body);
 		System.out.println("조회수 : " + article.hit);
 	}
 	
 	public void makeTestData() {
-		articleService.add(new Article(articleService.getNewId(), "admin" , "제목1", "저쩔", Util.getNow(), Util.getNow(), 15));
-		articleService.add(new Article(articleService.getNewId(), "a" , "제목2", "어쩔", Util.getNow(), Util.getNow(), 12));
-		articleService.add(new Article(articleService.getNewId(), "b" , "제목3", "ㅎㅇㅎㅇ", Util.getNow(), Util.getNow(), 4));
+		articleService.add(new Article(articleService.getNewId(),1, "admin" , "제목1", "저쩔", Util.getNow(), Util.getNow(), 15));
+		articleService.add(new Article(articleService.getNewId(),2, "a" , "제목2", "어쩔", Util.getNow(), Util.getNow(), 12));
+		articleService.add(new Article(articleService.getNewId(),3, "b" , "제목3", "ㅎㅇㅎㅇ", Util.getNow(), Util.getNow(), 4));
 
 		System.out.println("테스트를 위한 데이터 3개 생성 완료.");
 	}
@@ -104,7 +104,7 @@ public class ArticleController extends Controller {
 			break;
 		}
 		String regDate = Util.getNow();
-		Article newArticle = new Article(id, loginMember.userId, title, body, regDate, regDate);
+		Article newArticle = new Article(id, loginMember.memberId,loginMember.name, title, body, regDate, regDate);
 
 		articleService.add(newArticle);
 
@@ -175,7 +175,7 @@ public class ArticleController extends Controller {
 			System.out.println(id + "번 글은 존재하지 않습니다.");
 			return;
 		}
-		if (!article.userId.equals(loginMember.userId)) {
+		if (article.memberId != loginMember.memberId) {
 			System.out.println("권한이 없습니다.");
 			return;
 		}
@@ -197,7 +197,7 @@ public class ArticleController extends Controller {
 			System.out.println(id + "번 글은 존재하지 않습니다.");
 			return;
 		}
-		if (!article.userId.equals(loginMember.userId)) {
+		if (article.memberId != loginMember.memberId) {
 			System.out.println("권한이 없습니다.");
 			return;
 		}
