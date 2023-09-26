@@ -39,4 +39,16 @@ public class ArticleDao extends Dao{
 	public void remove(Article article) {
 		articles.remove(article);
 	}
+	public ArrayList<Article> getFilterArticlesBySearchKeyword(String searchKeyword) {
+		
+		ArrayList<Article> filterArticles = new ArrayList<>();
+		
+		for(Article a : articles) {
+			if(a.title.contains(searchKeyword)) {
+				filterArticles.add(a);
+			}
+		}
+		
+		return filterArticles;
+	}
 }

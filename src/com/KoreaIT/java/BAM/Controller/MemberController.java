@@ -50,7 +50,7 @@ public class MemberController extends Controller{
 			break;
 		}
 	}
-	
+	/**회원 가입*/
 	private void doJoin() {
 		String loginId;
 		String password;
@@ -112,6 +112,7 @@ public class MemberController extends Controller{
 
 		}
 	}
+	/**로그인 기능*/
 	private void doLogin() {
 		if (isLogined()) {
 			System.out.println("이미 로그인 중입니다.");
@@ -155,6 +156,7 @@ public class MemberController extends Controller{
 		System.out.println(loginMember.name + "님 환영합니다.");
 		
 	}
+	/**로그아웃 기능*/
 	private void doLogout() {
 		if (!isLogined()) {
 			System.out.println("로그인 상태가 아닙니다.");
@@ -163,7 +165,7 @@ public class MemberController extends Controller{
 		loginMember = null;
 		System.out.println("로그아웃 되었습니다.");
 	}
-
+	/**로그인 되어있는 계정 정보창*/
 	private void doMypage() {
 		if(!isLogined()) {
 			System.out.println("로그인 상태가 아닙니다.");
@@ -175,6 +177,7 @@ public class MemberController extends Controller{
 		System.out.println("아이디 : " + loginMember.loginId);
 		System.out.println("이름 : " + loginMember.name);
 	}
+	/**회원 탈퇴*/
 	private void doSecession() {
 		if(!isLogined()) {
 			System.out.println("로그인 상태가 아닙니다.");
@@ -193,9 +196,10 @@ public class MemberController extends Controller{
 			System.out.println("회원 탈퇴가 완료되었습니다.");
 		}
 	}
+	/**회원목록 열람 ( 관리자 전용 )*/
 	private void showList() {
 		if(loginMember == null || loginMember.memberId != 1) {
-			System.out.println("관리자만 사용 가능합니다.");
+			System.out.println("접근 불가");
 			return;
 		}
 		for(Member member : memberService.getMembers()) {

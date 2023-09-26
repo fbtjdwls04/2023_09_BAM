@@ -53,7 +53,7 @@ public class ArticleController extends Controller {
 		System.out.println("내용 : " + article.body);
 		System.out.println("조회수 : " + article.hit);
 	}
-	
+	/**게시글 테스트 데이터*/
 	public void makeTestData() {
 		articleService.add(new Article(articleService.getNewId(),1, "admin" , "제목1", "저쩔", Util.getNow(), Util.getNow(), 15));
 		articleService.add(new Article(articleService.getNewId(),2, "a" , "제목2", "어쩔", Util.getNow(), Util.getNow(), 12));
@@ -61,7 +61,7 @@ public class ArticleController extends Controller {
 
 		System.out.println("테스트를 위한 데이터 3개 생성 완료.");
 	}
-	
+	/**게시글 번호가 들어가는 명령어의 누락 및 숫자판별*/
 	private boolean numberCheck(String splitCommand[]) {
 		if (splitCommand.length < 3) {
 			System.out.println("게시물 번호를 입력해주세요.");
@@ -76,7 +76,7 @@ public class ArticleController extends Controller {
 		}
 		return true;
 	}
-
+	/**게시글 작성*/
 	private void doWrite() {
 		if (!isLogined()) {
 			System.out.println("로그인 후 사용이 가능합니다.");
@@ -111,12 +111,11 @@ public class ArticleController extends Controller {
 		System.out.println(id + "번 글이 생성되었습니다.");
 		System.out.println(regDate);
 	}
-
+	/**게시글 목록 및 검색*/
 	private void showList() {
-		if (command.startsWith("article list"))	{
-			if (articleService.size() == 0) {
-				System.out.println("게시글이 없습니다.");
-			}
+		if (articleService.size() == 0) {
+			System.out.println("게시글이 없습니다.");
+			return;
 		}
 
 		String searchKeyword = command.substring("article list".length()).trim();
@@ -125,15 +124,9 @@ public class ArticleController extends Controller {
 		ArrayList<Article> filterArticles = articleService.getArticles();
 
 		if (searchKeyword.length() > 0) {
-
-			filterArticles = new ArrayList<>();
-
-			for (Article article : articleService.getArticles()) {
-				if (article.title.contains(searchKeyword)) {
-					filterArticles.add(article);
-				}
-			}
+			filterArticles = articleService.getFilterArticlesBySearchKeyword(searchKeyword);
 		}
+		
 		if (filterArticles.size() == 0) {
 			System.out.println("검색 결과가 없습니다.");
 		}
@@ -143,7 +136,7 @@ public class ArticleController extends Controller {
 		}
 
 	}
-
+	/**게시글 확인*/
 	private void showDetail() {
 		if (!numberCheck(splitCommand)) {
 			return;
@@ -160,6 +153,7 @@ public class ArticleController extends Controller {
 
 		printArticle(article);
 	}
+	/** 게시글 삭제 */
 	private void doDelete() {
 		if (!numberCheck(splitCommand)) {
 			return;
@@ -175,6 +169,7 @@ public class ArticleController extends Controller {
 			System.out.println(id + "번 글은 존재하지 않습니다.");
 			return;
 		}
+		// 관리자 계정은 모든 글 삭제 가능
 		if (article.memberId != loginMember.memberId && loginMember.memberId != 1) {
 			System.out.println("권한이 없습니다.");
 			return;
@@ -182,6 +177,7 @@ public class ArticleController extends Controller {
 		articleService.remove(article);
 		System.out.println(id + "번 게시물을 삭제하였습니다.");
 	}
+	/**게시글 수정*/
 	private void doModify() {
 		if (!numberCheck(splitCommand)) {
 			return;

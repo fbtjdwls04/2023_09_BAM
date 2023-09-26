@@ -29,4 +29,7 @@ public class ArticleService {
 	public int getNewId() {
 		return articleDao.getNewId();
 	}
+	public ArrayList<Article> getFilterArticlesBySearchKeyword(String searchKeyword) {
+		return articleDao.getFilterArticlesBySearchKeyword(searchKeyword);
+	}
 }
